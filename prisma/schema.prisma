@@ -6,69 +6,47 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-// model User {
-//   id String @id @default(auto()) @map("_id") @db.ObjectId
-//   name String?
-//   email String? @unique
-//   emailVerified DateTime?
-//   image String?
-//   hashedPassword String?
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   favoriteIds String[] @db.ObjectId
+model Song {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  albumId String @db.ObjectId
+  playlistId String @db.ObjectId
+  title String
+  imageUrl String
+  description String
+  audioUrl String?
+  duration String?
 
-//   accounts Account[]
-//   listings Listing[]
-//   erservations Reservation[]
-// }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-// model Account {
-//   id String @id @default(auto()) @map("_id") @db.ObjectId
-//   userId String @db.ObjectId
-//   type String
-//   provider String
-//   providerAccountId String
-//   refresh_token String? @db.String
-//   access_token String? @db.String
-//   expires_at Int?
-//   token_type String?
-//   scope String?
-//   id_token String? @db.String
-//   session_state String?
+  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  playlist Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+} 
 
-//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Album {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String
+  imageUrl String?
 
-//   @@unique([provider, providerAccountId])
-// }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-// model Listing {
-//   id String @id @default(auto()) @map("_id") @db.ObjectId
-//   title String
-//   description String
-//   imageSrc String
-//   createdAt DateTime @default(now())
-//   category String
-//   roomCount Int
-//   bathroomCount Int
-//   guestCount Int
-//   locationValue String
-//   tv Boolean?
-//   kitchen Boolean?
-//   heating Boolean?
-//   workplace Boolean?
-//   pool Boolean?
-//   gym Boolean?
-//   crib Boolean?
-//   breakfast Boolean?
-//   userId String @db.ObjectId
-//   price Int
-//   minPrice Int?
-//   maxPrice Int?
+  songs Song[]
+}
 
-//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   reservations Reservation[]
-// } 
+model Playlist {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String
+  imageUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  songs Song[]
+}
