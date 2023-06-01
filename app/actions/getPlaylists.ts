@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma/prismaClient";
+import prisma from "@/prisma/prismaClient";
 
 export default async function getPlaylists() {
   try {
@@ -8,7 +8,6 @@ export default async function getPlaylists() {
       },
     });
 
-    
     return playlists;
   } catch (error: any) {
     throw new Error(error.message);

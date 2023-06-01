@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma/prismaClient";
+import prisma from "@/prisma/prismaClient";
 interface IParams {
   playlistId?: string;
 }
@@ -12,6 +12,7 @@ const getPlaylistById = async (params: IParams) => {
         playlistId: playlistId,
       },
       include: {
+        album: true,
         playlist: true,
       },
     });
@@ -20,7 +21,7 @@ const getPlaylistById = async (params: IParams) => {
       playlist: {
         ...songs[0].playlist,
       },
-      songs: [...songs],
+      songs: [ ...songs ],
     };
   } catch (e: any) {
     throw new Error(e);
