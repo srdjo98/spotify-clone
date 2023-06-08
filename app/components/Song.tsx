@@ -9,7 +9,6 @@ interface SongProps {
 }
 
 const Song = ({ title, description, imageUrl }: SongProps) => {
-    console.log(imageUrl);
   return (
     <div className="flex flex-row">
       <div>

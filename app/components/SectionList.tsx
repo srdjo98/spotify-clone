@@ -20,7 +20,7 @@ const SectionList = ({ title, subtitle, playlists }: SectionListProps) => {
 
   return (
     <div className="p-5 w-full">
-      <div className="bg-gray-1000">
+      <div className="bg-gray-900">
         <div className="flex flex-row justify-between pr-5 pl-5 pt-5">
           <h3 className="text-2xl font-bold">{title}</h3>
           <div className="text-gray-300 font-bold">{subtitle}</div>

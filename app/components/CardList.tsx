@@ -12,7 +12,7 @@ interface CardListProps {
 const CardList = ({ title, desc, imageUrl }: CardListProps) => {
   return (
     <div className="flex flex-row flex-wrap justify-between gap-10 pl-8 pr-8 pt-8 ">
-      <div className="bg-gray-900 w-[220px] mb-5 rounded-md hover:bg-gray-800 group">
+      <div className="bg-gray-800 w-[220px] mb-5 rounded-md hover:bg-gray-700 group">
         <div className=" last:h-40 p-5">
           <div className="relative">
             <Image

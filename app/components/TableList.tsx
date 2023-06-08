@@ -1,73 +1,41 @@
 "use client";
 
-import TimelapseIcon from "@mui/icons-material/Timelapse";
 import {
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import Song from "./Song";
 
 export interface AlbumProps {
+  id: string;
   title: string;
+  description: string;
+  imageUrl: string | null;
 }
 
 export interface SongProps {
   id: any;
   title: string;
   description: string;
-  imageUrl: string;
+  imageUrl: string | null;
+  duration: string | null;
   album: AlbumProps;
-  duration?: string;
 }
 
 interface SongsTableProps {
-  songs: any;
+  data: any;
+  columns: any;
 }
 
-const SongsTable = ({ songs }: SongsTableProps) => {
-  const columnHelper = createColumnHelper<SongProps>();
-
-  let i = 1;
-
-  const columns = [
-    columnHelper.accessor("id", {
-      cell: () => <div className="pt-3">{i++}</div>,
-      header: () => <span>#</span>,
-      size: 10,
-    }),
-    columnHelper.accessor("title", {
-      cell: (info) => (
-        <Song
-          title={info.getValue()}
-          description={info.row.getValue("description")}
-          imageUrl={info.row.getValue("imageUrl")}
-        />
-      ),
-      header: () => <span>Title</span>,
-      size: 40,
-    }),
-    columnHelper.accessor("album.title", {
-      cell: (info) => <div className="pt-3">{info.getValue()}</div>,
-      header: () => <span>Album</span>,
-      size: 30,
-    }),
-    columnHelper.accessor("duration", {
-      cell: (info) => <div className="pt-3">{info.getValue()}</div>,
-      header: () => <TimelapseIcon />,
-      size: 10,
-    }),
-  ];
-
+const TableList = ({ data, columns }: SongsTableProps) => {
   const table = useReactTable({
-    data: songs,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
   return (
-    <div className="pl-5 pr-5">
+    <div className="pl-5 pr-5 pt-5">
       <table className="w-full">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -99,7 +67,7 @@ const SongsTable = ({ songs }: SongsTableProps) => {
           {table.getRowModel().rows.map((row) => (
             <tr
               key={row.id}
-              className="flex flex-row justify-between pt-2 pb-2 pl-3 pr-3 mt-5 hover:bg-gray-600 rounded-md"
+              className="group flex flex-row justify-between pt-2 pb-2 pl-3 pr-3 mt-5 hover:bg-gray-600 rounded-md"
             >
               {row.getVisibleCells().map((cell) => (
                 <td
@@ -122,4 +90,4 @@ const SongsTable = ({ songs }: SongsTableProps) => {
   );
 };
 
-export default SongsTable;
+export default TableList;
