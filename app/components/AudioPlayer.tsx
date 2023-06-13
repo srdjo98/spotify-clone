@@ -88,7 +88,7 @@ const AudioPlayer = () => {
             onChange={handleRange}
           />
         </div>
-        <div className="pt-6 text-[14px] w-20 pl-5 text-gray-300 font-bold">
+        <div className="pt-6 text-[14px] pl-5 text-gray-300 font-bold">
           {duration && !isNaN(duration) && calculateTime(duration)}
         </div>
       </div>
