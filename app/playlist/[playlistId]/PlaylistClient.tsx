@@ -1,6 +1,6 @@
 "use client";
 
-import Modal from "@/app/components/Modal/Modal";
+import AudioPlayer from "@/app/components/AudioPlayer";
 import SectionHeader from "@/app/components/SectionHeader";
 import Song from "@/app/components/Song";
 import TableList, { SongProps } from "@/app/components/TableList";
@@ -85,6 +85,7 @@ const PlaylistClient = ({ data }: PlaylistClientProps) => {
             listCount={data.songs.length}
           />
           <TableList data={data.songs} columns={columns} />
+          <AudioPlayer  />
         </>
       </Container>
     </>

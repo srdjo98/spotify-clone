@@ -1,29 +1,33 @@
 "use client";
 
 import { useModel } from "@/app/contexts/modalContext";
-import axios from "axios";
+import { useSnackBar } from "@/app/contexts/useSnackBar";
+import { signIn } from "next-auth/react";
 import { Controller, useForm } from "react-hook-form";
 import Input from "../Input/Input";
 import Modal from "./Modal";
 
+interface FormDataProps {
+  email: string;
+  password: string;
+}
+
 const LoginModal = () => {
+  const { notify } = useSnackBar();
   const { onClose } = useModel();
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<any>();
 
-  const handleOnSubmit = (data: any) => {
-    axios
-      .post("/api/login", {
-        ...data,
-      })
-      .then(() => {
-        console.log("success");
-        onClose();
-      })
-      .catch((e) => console.log(e.message));
+  const onSubmit = (data: FormDataProps) => {
+    signIn("credentials", { ...data, redirect: false }).then(() => {
+      onClose();
+      notify({
+        message: "Logged in.",
+      });
+    });
   };
 
   const formFields = [
@@ -91,7 +95,7 @@ const LoginModal = () => {
       subTitle="Login to website"
       body={body}
       primaryActionLabel="Login"
-      primaryAction={() => handleSubmit(handleOnSubmit)()}
+      primaryAction={handleSubmit(onSubmit)}
       secondaryActionLabel="Sign Up"
     />
   );

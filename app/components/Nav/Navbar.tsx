@@ -5,6 +5,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import HouseIcon from "@mui/icons-material/House";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import SearchIcon from "@mui/icons-material/Search";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ReactElement, useState } from "react";
@@ -12,6 +13,8 @@ import LoginModal from "../Modal/LoginModal";
 import RegisterModal from "../Modal/RegisterModal";
 
 const Navbar = ({ children }: { children: ReactElement }) => {
+  const { data: session } = useSession();
+
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
   const { onOpen } = useModel();
@@ -51,26 +54,35 @@ const Navbar = ({ children }: { children: ReactElement }) => {
             className="cursor-pointer mt-2"
             onClick={() => router.back()}
           />
-          <div className="flex">
-            <button
-              className="text-gray-400 text-xl pr-3"
-              onClick={() => {
-                setIsLogin(false);
-                onOpen();
-              }}
-            >
-              Sign Up
-            </button>
+          {session?.user ? (
             <button
               className="bg-white text-black rounded-2xl pt-2 pb-2 pr-5 pl-5 text-xl"
-              onClick={() => {
-                setIsLogin(true);
-                onOpen();
-              }}
+              onClick={() => signOut()}
             >
-              Login
+              Sign Out
             </button>
-          </div>
+          ) : (
+            <div className="flex">
+              <button
+                className="text-gray-400 text-xl pr-3"
+                onClick={() => {
+                  setIsLogin(false);
+                  onOpen();
+                }}
+              >
+                Sign Up
+              </button>
+              <button
+                className="bg-white text-black rounded-2xl pt-2 pb-2 pr-5 pl-5 text-xl"
+                onClick={() => {
+                  setIsLogin(true);
+                  onOpen();
+                }}
+              >
+                Login
+              </button>
+            </div>
+          )}
         </div>
         {children}
         {isLogin ? <LoginModal /> : <RegisterModal />}
