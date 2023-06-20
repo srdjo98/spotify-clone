@@ -20,6 +20,7 @@ export interface SongProps {
   imageUrl: string | null;
   duration: string | null;
   album: AlbumProps;
+  audioUrl?: string;
 }
 
 interface SongsTableProps {

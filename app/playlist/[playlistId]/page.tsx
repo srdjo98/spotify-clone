@@ -1,4 +1,5 @@
 import getPlaylistById from "@/app/actions/getPlaylistById";
+import Container from "@/app/components/UI/Container";
 import PlaylistClient from "./PlaylistClient";
 
 interface PlaylistPageProps {
@@ -10,7 +11,9 @@ const PlaylistPage = async ({ params }: { params: PlaylistPageProps }) => {
 
   return (
     <div className="h-full">
-      <PlaylistClient data={data} />
+      <Container>
+        <PlaylistClient data={data} />
+      </Container>
     </div>
   );
 };

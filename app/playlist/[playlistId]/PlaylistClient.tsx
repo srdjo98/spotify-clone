@@ -1,13 +1,15 @@
 "use client";
 
-import AudioPlayer from "@/app/components/AudioPlayer";
 import SectionHeader from "@/app/components/SectionHeader";
 import Song from "@/app/components/Song";
 import TableList, { SongProps } from "@/app/components/TableList";
-import Container from "@/app/components/UI/Container";
+import { useAudioPlayer } from "@/app/contexts/audioPlayerContext";
+import { useModel } from "@/app/contexts/modalContext";
+import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import TimelapseIcon from "@mui/icons-material/Timelapse";
 import { createColumnHelper } from "@tanstack/react-table";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 interface PlaylistClientProps {
@@ -23,20 +25,38 @@ interface PlaylistClientProps {
 
 const PlaylistClient = ({ data }: PlaylistClientProps) => {
   const router = useRouter();
+  const { data: session } = useSession();
+  const { onOpen, setType } = useModel();
+  const { setSongs, song } = useAudioPlayer();
   const columnHelper = createColumnHelper<SongProps>();
 
-  let i = 1;
+  const handlePlay = (audioUrl: string | undefined) => {
+    if (!session?.user) {
+      setType("login");
+      onOpen();
+      return;
+    }
+    setSongs(data.songs);
+    const currentSong = data.songs.find((song) => song.audioUrl === audioUrl);
+    song.setCurrent(currentSong!);
+    song.onPlay();
+  };
 
+  let i = 1;
   const columns = [
     columnHelper.accessor("id", {
-      cell: () => (
-        <div className="pt-3 flex relative">
-          <div className="absolute group-hover:opacity-0">{i++}</div>
+      cell: ({ row }) => (
+        <div className=" flex relative">
+          <div className="absolute group-hover:opacity-0 pt-3">{i++}</div>
           <div
-            className="absolute opacity-0 group-hover:opacity-100 group-hover:cursor-pointer"
-            onClick={() => alert("play music")}
+            className="absolute opacity-0 group-hover:opacity-100 group-hover:cursor-pointer pt-2"
+            onClick={() => handlePlay(row.original.audioUrl)!}
           >
-            <PlayArrowIcon />
+            {song.isPlaying && row.original.id === song.current?.id ? (
+              <PauseIcon fontSize="large" />
+            ) : (
+              <PlayArrowIcon fontSize="large" />
+            )}
           </div>
         </div>
       ),
@@ -75,19 +95,14 @@ const PlaylistClient = ({ data }: PlaylistClientProps) => {
 
   return (
     <>
-      <Container>
-        <>
-          <SectionHeader
-            title={data.playlist.title || ""}
-            subtitle="Playlist"
-            description={data.playlist.description || ""}
-            imageUrl={data.playlist.imageUrl || ""}
-            listCount={data.songs.length}
-          />
-          <TableList data={data.songs} columns={columns} />
-          <AudioPlayer  />
-        </>
-      </Container>
+      <SectionHeader
+        title={data.playlist.title || ""}
+        subtitle="Playlist"
+        description={data.playlist.description || ""}
+        imageUrl={data.playlist.imageUrl || ""}
+        listCount={data.songs.length}
+      />
+      <TableList data={data.songs} columns={columns} />
     </>
   );
 };

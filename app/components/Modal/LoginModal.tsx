@@ -14,7 +14,7 @@ interface FormDataProps {
 
 const LoginModal = () => {
   const { notify } = useSnackBar();
-  const { onClose } = useModel();
+  const { setType, onClose } = useModel();
   const {
     control,
     handleSubmit,
@@ -97,6 +97,7 @@ const LoginModal = () => {
       primaryActionLabel="Login"
       primaryAction={handleSubmit(onSubmit)}
       secondaryActionLabel="Sign Up"
+      secondaryAction={() => setType("register")}
     />
   );
 };
