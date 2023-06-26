@@ -1,6 +1,7 @@
 "use client";
 
 import { useModel } from "@/app/contexts/modalContext";
+import { useSnackBar } from "@/app/contexts/useSnackBar";
 import axios from "axios";
 import { Controller, useForm } from "react-hook-form";
 import Input from "../Input/Input";
@@ -8,6 +9,7 @@ import Modal from "./Modal";
 
 const RegisterModal = () => {
   const { onClose } = useModel();
+  const { notify } = useSnackBar();
   const {
     control,
     handleSubmit,
@@ -20,8 +22,10 @@ const RegisterModal = () => {
         ...data,
       })
       .then(() => {
-        console.log("success");
         onClose();
+        notify({
+          message: "Registered!",
+        });
       })
       .catch((e) => console.log(e.message));
   };

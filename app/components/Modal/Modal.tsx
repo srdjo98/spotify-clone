@@ -6,12 +6,13 @@ import { ReactElement } from "react";
 
 interface ModalProps {
   title: string;
-  subTitle: string;
+  subTitle?: string;
   body: ReactElement;
-  primaryAction: () => void;
-  primaryActionLabel: string;
+  primaryAction?: () => void;
+  primaryActionLabel?: string;
   secondaryAction?: () => void;
   secondaryActionLabel?: string;
+  closeAction?: () => void;
 }
 
 const Modal = ({
@@ -22,6 +23,7 @@ const Modal = ({
   primaryActionLabel,
   secondaryAction,
   secondaryActionLabel,
+  closeAction,
 }: ModalProps) => {
   const { isOpen, onClose } = useModel();
 
@@ -33,13 +35,13 @@ const Modal = ({
           <div className="absolute inset-0 h-full w-[100%]  flex flex-col justify-center items-center">
             <div className="p-5 rounded-2xl w-[450px]  bg-black">
               <div className="flex justify-between">
-                <div className="text-4xl">{title}</div>
+                <div className="text-4xl pb-1">{title}</div>
                 <CloseIcon
                   className="mt-2 cursor-pointer"
-                  onClick={() => onClose()}
+                  onClick={closeAction ? closeAction : onClose}
                 />
               </div>
-              <div className="text-xl pt-4 pb-4">{subTitle}</div>
+              {subTitle && <div className="text-xl pt-4 pb-4">{subTitle}</div>}
               <hr />
               <div className="flex flex-col pt-2">{body}</div>
               <div className="flex pt-7 justify-between">
@@ -51,12 +53,14 @@ const Modal = ({
                     {secondaryActionLabel}
                   </button>
                 )}
-                <button
-                  className="rounded-2xl bg-green-600 p-4"
-                  onClick={primaryAction}
-                >
-                  {primaryActionLabel}
-                </button>
+                {primaryActionLabel && (
+                  <button
+                    className="rounded-2xl bg-green-600 p-4"
+                    onClick={primaryAction}
+                  >
+                    {primaryActionLabel}
+                  </button>
+                )}
               </div>
             </div>
           </div>

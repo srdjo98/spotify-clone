@@ -13,6 +13,14 @@ export interface AlbumProps {
   imageUrl: string | null;
 }
 
+export interface SimpleSongProps {
+  id: any;
+  title: string;
+  description: string;
+  imageUrl: string | null;
+  duration: string | null;
+}
+
 export interface SongProps {
   id: any;
   title: string;

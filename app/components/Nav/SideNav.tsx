@@ -28,7 +28,10 @@ const SideNav = () => {
             <HouseIcon fontSize="large" />
             <div className="pl-4 pt-1">Home</div>
           </div>
-          <div className="font-bold text-lg pb-5 cursor-pointer flex">
+          <div
+            className="font-bold text-lg pb-5 cursor-pointer flex"
+            onClick={() => router.push("/search")}
+          >
             <SearchIcon fontSize="large" />
             <div className="pl-4 pt-1">Search</div>
           </div>

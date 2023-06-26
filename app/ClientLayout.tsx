@@ -11,6 +11,7 @@ import Navbar from "./components/Nav/Navbar";
 import SideNav from "./components/Nav/SideNav";
 import { useModal } from "./hooks/useModal";
 import { useNotify } from "./hooks/useNotify";
+import Snackbar from "./components/UI/Snackbar";
 
 const ClientLayout = ({
   session,
@@ -30,6 +31,7 @@ const ClientLayout = ({
             <ModalContext.Provider
               value={{ isOpen, type, onClose, onOpen, setType }}
             >
+              <Snackbar />
               <SideNav />
               <div className="w-[85%]">
                 <Navbar />

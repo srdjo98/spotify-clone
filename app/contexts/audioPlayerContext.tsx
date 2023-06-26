@@ -11,10 +11,15 @@ import { SongProps } from "../components/TableList";
 
 interface AudioPlayerProps {
   isOpen: boolean;
+  skipCount: number;
+  resetSkipCount: () => void;
   songs: SongProps[];
+  setDisabled: () => void;
   setSongs: (songs: SongProps[]) => void;
+  onClose: () => void;
   song: {
     isPlaying: boolean;
+    isDisabled: boolean;
     current: SongProps | undefined;
     setCurrent: (song: SongProps) => void;
     onPlay: () => void;
@@ -35,15 +40,14 @@ export const AudioPlayerProvider = ({
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  // const [isPrevDisabled, setIsPrevDisabled] = useState(false);
-  // const [isNextDisabled, setIsNextDisabled] = useState(true);
+  const [skipCount, setSkipCount] = useState<number>(0);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [currentSong, setCurrentSong] = useState<SongProps>();
-
   const [songs, setSongs] = useState<SongProps[]>([]);
 
   const handlePlaying = () => {
     setIsOpen(true);
-    setIsPlaying(!isPlaying);
+    setIsPlaying(!isPlaying); // check
   };
 
   const handleNext = () => {
@@ -51,6 +55,7 @@ export const AudioPlayerProvider = ({
     let currentIndex = songs.findIndex((song) => song.id === currentSong?.id);
     currentIndex++;
     const song = songs.find((_song, i) => currentIndex === i);
+    setSkipCount((prev) => prev + 1);
     if (song) {
       setCurrentSong(song);
     }
@@ -61,18 +66,29 @@ export const AudioPlayerProvider = ({
     let currentIndex = songs.findIndex((song) => song.id === currentSong?.id);
     currentIndex--;
     const song = songs.find((_song, i) => currentIndex === i);
+    setSkipCount((prev) => prev + 1);
     if (song) {
       setCurrentSong(song);
     }
   };
 
+  const handleClose = () => {
+    setIsPlaying(false);
+    setIsOpen(false);
+  };
+
   const value = useMemo(
     () => ({
       isOpen,
+      skipCount,
+      resetSkipCount: () => setSkipCount(0),
       songs,
       setSongs: (songs: SongProps[]) => setSongs(songs),
+      setDisabled: () => setIsDisabled(!isDisabled),
+      onClose: handleClose,
       song: {
         isPlaying,
+        isDisabled,
         current: currentSong,
         setCurrent: (song: SongProps) => setCurrentSong(song),
         onPlay: handlePlaying,
@@ -81,7 +97,7 @@ export const AudioPlayerProvider = ({
         onPrev: handlePrev,
       },
     }),
-    [isPlaying, songs, currentSong]
+    [isOpen, isPlaying, skipCount, songs, currentSong]
   );
 
   return (

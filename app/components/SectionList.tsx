@@ -19,7 +19,7 @@ const SectionList = ({ title, subtitle, playlists }: SectionListProps) => {
   const router = useRouter();
 
   return (
-    <div className="p-5 w-full">
+    <div className="p-5 w-full ">
       <div className="bg-gray-900">
         <div className="flex flex-row justify-between pr-5 pl-5 pt-5">
           <h3 className="text-2xl font-bold">{title}</h3>
