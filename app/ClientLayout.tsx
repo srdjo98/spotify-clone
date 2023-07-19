@@ -6,12 +6,15 @@ import { SnackBarContext } from "@/app/contexts/useSnackBar";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { ReactElement } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
 import AudioPlayer from "./components/AudioPlayer";
 import Navbar from "./components/Nav/Navbar";
 import SideNav from "./components/Nav/SideNav";
+import Snackbar from "./components/UI/Snackbar";
 import { useModal } from "./hooks/useModal";
 import { useNotify } from "./hooks/useNotify";
-import Snackbar from "./components/UI/Snackbar";
+
+export const queryClient = new QueryClient();
 
 const ClientLayout = ({
   session,
@@ -26,21 +29,23 @@ const ClientLayout = ({
   return (
     <SessionProvider session={session}>
       <div className="w-full flex">
-        <SnackBarContext.Provider value={values}>
-          <AudioPlayerProvider>
-            <ModalContext.Provider
-              value={{ isOpen, type, onClose, onOpen, setType }}
-            >
-              <Snackbar />
-              <SideNav />
-              <div className="w-[85%]">
-                <Navbar />
-                {children}
-                <AudioPlayer />
-              </div>
-            </ModalContext.Provider>
-          </AudioPlayerProvider>
-        </SnackBarContext.Provider>
+        <QueryClientProvider client={queryClient}>
+          <SnackBarContext.Provider value={values}>
+            <AudioPlayerProvider>
+              <ModalContext.Provider
+                value={{ isOpen, type, onClose, onOpen, setType }}
+              >
+                <Snackbar />
+                <SideNav />
+                <div className="w-[85%]">
+                  <Navbar />
+                  {children}
+                  <AudioPlayer />
+                </div>
+              </ModalContext.Provider>
+            </AudioPlayerProvider>
+          </SnackBarContext.Provider>
+        </QueryClientProvider>
       </div>
     </SessionProvider>
   );

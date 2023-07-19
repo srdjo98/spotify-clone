@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useModel } from "../contexts/modalContext";
 
 interface SectionHeaderProps {
   title: string;
@@ -17,8 +18,17 @@ const SectionHeader = ({
   imageUrl,
   listCount,
 }: SectionHeaderProps) => {
+  const {type, setType, onOpen} = useModel();
+  
+
+
+  const handleEdit = () => {
+    setType('edit');
+    onOpen();
+  }
+
   return (
-    <div className="p-10 bg-gradient-to-b from-gray-400 to-gray-700">
+    <div className="p-10 bg-gradient-to-b from-gray-400 to-gray-700" onClick={handleEdit}>
       <div className="flex flex-row h-50">
         <div className="shadow-black shadow-md">
           <Image

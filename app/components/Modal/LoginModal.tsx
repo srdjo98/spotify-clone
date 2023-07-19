@@ -22,7 +22,10 @@ const LoginModal = () => {
   } = useForm<any>();
 
   const onSubmit = (data: FormDataProps) => {
-    signIn("credentials", { ...data, redirect: false }).then(() => {
+    signIn("credentials", {
+      ...data,
+      callbackUrl: "http://localhost:3000/",
+    }).then(() => {
       onClose();
       notify({
         message: "Logged in.",

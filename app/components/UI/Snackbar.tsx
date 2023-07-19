@@ -12,7 +12,7 @@ const Snackbar = () => {
         <div
           className={`absolute ${
             status === "error" ? "bg-red-500" : "bg-green-500"
-          }  w-52 rounded-xl p-3 mr-5 mt-5 right-0 top-0 flex justify-between`}
+          }  w-52 rounded-xl p-3 mr-5 mt-5 right-0 top-0 flex justify-between z-50`}
         >
           <div className="text-">{message}</div>
           <CloseIcon className="cursor-pointer" onClick={() => onClose()} />

@@ -29,6 +29,7 @@ export interface SongProps {
   duration: string | null;
   album: AlbumProps;
   audioUrl?: string;
+  action?: () => {}
 }
 
 interface SongsTableProps {

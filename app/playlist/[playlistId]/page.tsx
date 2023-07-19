@@ -9,6 +9,10 @@ interface PlaylistPageProps {
 const PlaylistPage = async ({ params }: { params: PlaylistPageProps }) => {
   const data = await getPlaylistById(params);
 
+  if (!data) {
+    return <p>No Results</p>;
+  }
+
   return (
     <div className="h-full">
       <Container>

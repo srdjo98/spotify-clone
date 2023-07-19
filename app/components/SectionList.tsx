@@ -25,6 +25,7 @@ const SectionList = ({ title, subtitle, playlists }: SectionListProps) => {
           <h3 className="text-2xl font-bold">{title}</h3>
           <div className="text-gray-300 font-bold">{subtitle}</div>
         </div>
+        <div className="flex flex-row">
         {playlists?.map((playlist) => (
           <div
             key={playlist.id}
@@ -37,6 +38,7 @@ const SectionList = ({ title, subtitle, playlists }: SectionListProps) => {
             />
           </div>
         ))}
+        </div>
       </div>
     </div>
   );

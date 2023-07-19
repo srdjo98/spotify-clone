@@ -7,24 +7,22 @@ const getPlaylistById = async (params: IParams) => {
   try {
     const { playlistId } = params;
 
-    const songs = await prisma.song.findMany({
+    const playlist = await prisma.playlist.findMany({
       where: {
-        playlistId: playlistId,
+        id: playlistId,
       },
       include: {
-        album: true,
-        playlist: true,
+        songs: true,
       },
     });
 
-    return {
-      playlist: {
-        ...songs[0].playlist,
-      },
-      songs: [ ...songs ],
-    };
+    if (!playlist) {
+      return null;
+    }
+
+    return { playlist: playlist[0], songs: [...playlist[0].songs] };
   } catch (e: any) {
-    throw new Error(e);
+    throw new Error(e.message);
   }
 };
 

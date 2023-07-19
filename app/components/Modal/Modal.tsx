@@ -32,7 +32,7 @@ const Modal = ({
       {isOpen && (
         <>
           <div className="absolute inset-0  opacity-80 h-full w-full bg-gray-800" />
-          <div className="absolute inset-0 h-full w-[100%]  flex flex-col justify-center items-center">
+          <div className="absolute inset-0 h-full w-[100%]  flex flex-col justify-center items-center z-50">
             <div className="p-5 rounded-2xl w-[450px]  bg-black">
               <div className="flex justify-between">
                 <div className="text-4xl pb-1">{title}</div>

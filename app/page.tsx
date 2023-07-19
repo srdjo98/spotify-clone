@@ -10,7 +10,7 @@ export default async function Home() {
       <div className="flex flex-row bg-gray-900">
         <div className="w-full">
           <SectionList
-            title="Focus"
+            title="Browse Playlists"
             subtitle="Show All"
             playlists={playlists}
           />

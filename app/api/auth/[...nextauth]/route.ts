@@ -35,13 +35,15 @@ export const authOptions: any = {
         //   throw new Error("Wrong password");
         // }
 
+        console.log("auth options", user);
+
         return user;
       },
     }),
   ],
-  pages: {
-    signIn: "/",
-  },
+  // pages: {
+  //   signIn: "/",
+  // },
   debug: process.env.NODE_ENV === "development",
   session: {
     strategy: "jwt",
