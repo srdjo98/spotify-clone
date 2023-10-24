@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -14,7 +15,7 @@ export interface AlbumProps {
 }
 
 export interface SimpleSongProps {
-  id: any;
+  id: string;
   title: string;
   description: string;
   imageUrl: string | null;
@@ -22,22 +23,22 @@ export interface SimpleSongProps {
 }
 
 export interface SongProps {
-  id: any;
+  id: string;
   title: string;
   description: string;
   imageUrl: string | null;
   duration: string | null;
   album: AlbumProps;
   audioUrl?: string;
-  action?: () => {}
+  action?: () => {};
 }
 
-interface SongsTableProps {
-  data: any;
-  columns: any;
+interface SongsTableProps<T> {
+  data: T[];
+  columns: ColumnDef<T, any>[];
 }
 
-const TableList = ({ data, columns }: SongsTableProps) => {
+const TableList = <T,>({ data, columns }: SongsTableProps<T>) => {
   const table = useReactTable({
     data,
     columns,

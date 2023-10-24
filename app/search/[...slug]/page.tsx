@@ -5,7 +5,7 @@ import SearchSlugClient from "./SearchSlugClient";
 const SearchSlugPage = async ({ params }: { params: { slug: string[] } }) => {
   const songs = await getSongsByTitle(params);
 
-  if (songs?.length === 0) {
+  if (songs?.length === 0 || songs === null) {
     return <p>No Results</p>;
   }
 
@@ -13,7 +13,7 @@ const SearchSlugPage = async ({ params }: { params: { slug: string[] } }) => {
     <Container>
       <div className="flex flex-row bg-gray-900">
         <div className="w-full flex flex-row">
-          <SearchSlugClient songs={songs!} />
+          <SearchSlugClient songs={songs} />
         </div>
       </div>
     </Container>

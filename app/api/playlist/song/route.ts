@@ -22,11 +22,11 @@ export const POST = async (request: Request) => {
   if (playlist) {
     if (playlist.userId !== user?.id) {
       return NextResponse.json({
-        message: "Can only add to your playlist.",
+        message: "Can only add to your own playlist.",
       });
     }
 
-    const isExistingSong = playlist.songIDs.find((songID) => songID === songId);
+    const isExistingSong = playlist.songIDs.find((songID: string) => songID === songId);
     if (isExistingSong) {
       return NextResponse.json({
         message: "Song already in playlist",

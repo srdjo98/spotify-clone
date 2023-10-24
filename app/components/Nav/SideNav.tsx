@@ -1,13 +1,15 @@
 "use client";
 
 import { useSnackBar } from "@/app/contexts/useSnackBar";
-import AddSharpIcon from "@mui/icons-material/AddSharp";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EastSharpIcon from "@mui/icons-material/EastSharp";
-import HouseIcon from "@mui/icons-material/House";
-import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
-import SearchIcon from "@mui/icons-material/Search";
-import WestSharpIcon from "@mui/icons-material/WestSharp";
+import {
+  AddSharp,
+  Delete,
+  EastSharp,
+  House,
+  LibraryMusic,
+  Search,
+  WestSharp,
+} from "@mui/icons-material";
 import { Playlist } from "@prisma/client";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -17,13 +19,14 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 
 const SideNav = () => {
-  const [isExtended, setIsExtended] = useState(false);
+  const [isExtended, setIsExtended] = useState<boolean>(false);
   const { notify } = useSnackBar();
   const router = useRouter();
   const { data: session } = useSession();
   const { isLoading, data, refetch } = useQuery("playlists", () =>
     axios.get("/api/playlists")
   );
+
   const playlists: Playlist[] = data?.data;
 
   const handleExtend = () => {
@@ -39,13 +42,15 @@ const SideNav = () => {
 
   const handleDeletePlaylist = (playlistId: string) => {
     axios
-      .post(`/api/playlist/${playlistId}`, {
+      .post(`/api/playlist/delete`, {
         playlistId,
       })
       .then(() => {
         notify({
           message: "Successfully deleted",
         });
+
+        setIsExtended(false);
         router.push("/");
         refetch();
       });
@@ -67,29 +72,29 @@ const SideNav = () => {
             className="font-bold text-lg pb-5 cursor-pointer flex"
             onClick={() => router.push("/")}
           >
-            <HouseIcon fontSize="large" />
+            <House fontSize="large" />
             <div className="pl-4 pt-1">Home</div>
           </div>
           <div
             className="font-bold text-lg pb-5 cursor-pointer flex"
             onClick={() => router.push("/search")}
           >
-            <SearchIcon fontSize="large" />
+            <Search fontSize="large" />
             <div className="pl-4 pt-1">Search</div>
           </div>
           {session?.user && (
             <>
               <div className="font-bold text-lg pb-5 cursor-pointer flex justify-between">
                 <div className="flex">
-                  <LibraryMusicIcon fontSize="large" />
+                  <LibraryMusic fontSize="large" />
                   <div className="pl-4 pt-1">Your Library</div>
                 </div>
                 <div>
-                  <AddSharpIcon className="mr-2" onClick={handleCreate} />
+                  <AddSharp className="mr-2" onClick={handleCreate} />
                   {isExtended ? (
-                    <WestSharpIcon onClick={handleExtend} />
+                    <WestSharp onClick={handleExtend} />
                   ) : (
-                    <EastSharpIcon onClick={handleExtend} />
+                    <EastSharp onClick={handleExtend} />
                   )}
                 </div>
               </div>
@@ -107,7 +112,11 @@ const SideNav = () => {
                         onClick={() => router.push(`/playlist/${playlist.id}`)}
                       >
                         <Image
-                          src={`/../public/images/${playlist.imageUrl}`}
+                          src={`/../public/images/${
+                            playlist.imageUrl
+                              ? playlist.imageUrl
+                              : "placeholder.png"
+                          }`}
                           width={35}
                           height={35}
                           alt={playlist.title}
@@ -119,7 +128,7 @@ const SideNav = () => {
                         <div className="flex">
                           <div className="pr-2">{playlist.description}</div>
                           <div>
-                            <DeleteIcon
+                            <Delete
                               className="cursor-pointer hover:text-red-600"
                               onClick={() => handleDeletePlaylist(playlist.id)}
                             />

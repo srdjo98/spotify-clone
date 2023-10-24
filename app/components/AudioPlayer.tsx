@@ -8,11 +8,11 @@ import { useEffect, useRef, useState } from "react";
 import { useAudioPlayer } from "../contexts/audioPlayerContext";
 import { useModel } from "../contexts/modalContext";
 import { calculateTime } from "../utils/calculations";
-import AdModal from "./Modal/AdModal";
+import AdModal from "./Modal/Ad/AdModal";
 
 const AudioPlayer = () => {
   const { isOpen, setDisabled, skipCount, song } = useAudioPlayer();
-  const { onOpen, type, setType } = useModel();
+  const { isModalsOpen, setIsModalsOpen } = useModel();
   const [duration, setDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const audioPlayer = useRef<HTMLAudioElement>(null);
@@ -43,8 +43,7 @@ const AudioPlayer = () => {
 
     if (skipCount > 9) {
       setDisabled();
-      setType("ad");
-      onOpen();
+      setIsModalsOpen({ ad: true });
       song.setCurrent({
         title: "KFC AD",
         imageUrl: "kfc.jpeg",
@@ -84,7 +83,7 @@ const AudioPlayer = () => {
 
   return (
     <>
-      {type === "ad" && <AdModal song={song.current!} />}
+      {isModalsOpen.ad && <AdModal song={song.current!} />}
       {isOpen && (
         <div className="fixed bottom-0 w-[85%] flex border border-gray-600 bg-slate-500 justify-center p-3 flex-nowrap">
           <audio

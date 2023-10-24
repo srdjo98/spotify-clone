@@ -14,7 +14,13 @@ import Snackbar from "./components/UI/Snackbar";
 import { useModal } from "./hooks/useModal";
 import { useNotify } from "./hooks/useNotify";
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const ClientLayout = ({
   session,
@@ -24,7 +30,7 @@ const ClientLayout = ({
   children: ReactElement;
 }) => {
   const values = useNotify();
-  const { isOpen, type, onOpen, onClose, setType } = useModal();
+  const { isModalsOpen, priceType, setIsModalsOpen, setPriceType } = useModal();
 
   return (
     <SessionProvider session={session}>
@@ -33,7 +39,12 @@ const ClientLayout = ({
           <SnackBarContext.Provider value={values}>
             <AudioPlayerProvider>
               <ModalContext.Provider
-                value={{ isOpen, type, onClose, onOpen, setType }}
+                value={{
+                  isModalsOpen,
+                  priceType,
+                  setIsModalsOpen,
+                  setPriceType,
+                }}
               >
                 <Snackbar />
                 <SideNav />

@@ -16,5 +16,23 @@ export const POST = async (request: Request) => {
     },
   });
 
+  if (!user) {
+    return NextResponse.json({ message: "Something went wrong" });
+  }
+
+  const subscription = await prisma.subscription.create({
+    data: {
+      userId: user.id,
+      typeId: "6512920218870968768bf4d9",
+      status: "Completed",
+      amount: 0,
+      currency: "eur",
+    },
+  });
+
+  if (!subscription) {
+    return NextResponse.json({ message: "Base subscription failed" });
+  }
+
   return NextResponse.json(user);
 };

@@ -3,22 +3,22 @@
 import { useAudioPlayer } from "@/app/contexts/audioPlayerContext";
 import { useModel } from "@/app/contexts/modalContext";
 import Image from "next/image";
-import { SongProps } from "../TableList";
-import Modal from "./Modal";
+import { SongProps } from "../../TableList";
+import Modal from "../Modal";
 
 const AdModal = ({ song }: { song: SongProps }) => {
+  const { setIsModalsOpen } = useModel();
   const {
     resetSkipCount,
     onClose: onClosePlayer,
     setDisabled,
   } = useAudioPlayer();
-  const { onClose: onCloseModal } = useModel();
 
   const handleClose = () => {
     onClosePlayer();
     setDisabled();
     resetSkipCount();
-    onCloseModal();
+    setIsModalsOpen({ ad: false });
   };
 
   return (

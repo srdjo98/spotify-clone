@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import CardList from "./CardList";
+import Spinner from "./Spinner/Spinner";
 
 interface PlaylistProps {
   id: string;
@@ -18,6 +19,10 @@ interface SectionListProps {
 const SectionList = ({ title, subtitle, playlists }: SectionListProps) => {
   const router = useRouter();
 
+  if (!title && !subtitle && !playlists) {
+    return <Spinner />;
+  }
+
   return (
     <div className="p-5 w-full ">
       <div className="bg-gray-900">
@@ -26,18 +31,18 @@ const SectionList = ({ title, subtitle, playlists }: SectionListProps) => {
           <div className="text-gray-300 font-bold">{subtitle}</div>
         </div>
         <div className="flex flex-row">
-        {playlists?.map((playlist) => (
-          <div
-            key={playlist.id}
-            onClick={() => router.push(`/playlist/${playlist.id}`)}
-          >
-            <CardList
-              title={playlist.title}
-              desc={playlist.description}
-              imageUrl={`/../public/images/${playlist.imageUrl}`}
-            />
-          </div>
-        ))}
+          {playlists?.map((playlist) => (
+            <div
+              key={playlist.id}
+              onClick={() => router.push(`/playlist/${playlist.id}`)}
+            >
+              <CardList
+                title={playlist.title}
+                desc={playlist.description}
+                imageUrl={`/../public/images/${playlist.imageUrl}`}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </div>

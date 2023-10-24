@@ -2,44 +2,63 @@
 
 import { useModel } from "@/app/contexts/modalContext";
 import { useSnackBar } from "@/app/contexts/useSnackBar";
-import { signIn } from "next-auth/react";
+import axios from "axios";
 import { Controller, useForm } from "react-hook-form";
-import Input from "../Input/Input";
-import Modal from "./Modal";
+import Input from "../../Input/Input";
+import Modal from "../Modal";
 
-interface FormDataProps {
-  email: string;
-  password: string;
-}
-
-const LoginModal = () => {
+const RegisterModal = () => {
+  const { setIsModalsOpen } = useModel();
   const { notify } = useSnackBar();
-  const { setType, onClose } = useModel();
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<any>();
+  } = useForm();
 
-  const onSubmit = (data: FormDataProps) => {
-    signIn("credentials", {
-      ...data,
-      callbackUrl: "http://localhost:3000/",
-    }).then(() => {
-      onClose();
-      notify({
-        message: "Logged in.",
-      });
-    });
+  const handleOnSubmit = (data: any) => {
+    axios
+      .post("/api/register", {
+        ...data,
+      })
+      .then(() => {
+        setIsModalsOpen({ register: false });
+        notify({
+          message: "Registered!",
+        });
+      })
+      .catch((e) => console.log(e.message));
   };
 
   const formFields = [
+    {
+      label: "Name",
+      name: "name",
+      type: "text",
+      defaultValue: "",
+      options: {
+        required: {
+          value: true,
+          message: "Required field.",
+        },
+      },
+    },
     {
       label: "Email",
       name: "email",
       type: "text",
       defaultValue: "",
       options: {
+        optionFields: [
+          {
+            label: "VW",
+            value: "vw",
+          },
+          {
+            label: "Audi",
+            value: "audi",
+          },
+        ],
         required: {
           value: true,
           message: "Required field.",
@@ -94,15 +113,14 @@ const LoginModal = () => {
 
   return (
     <Modal
-      title="Login"
-      subTitle="Login to website"
+      title="Sign Up"
+      subTitle="Sign Up to get better features."
       body={body}
-      primaryActionLabel="Login"
-      primaryAction={handleSubmit(onSubmit)}
-      secondaryActionLabel="Sign Up"
-      secondaryAction={() => setType("register")}
+      primaryActionLabel="Sign Up"
+      primaryAction={() => handleSubmit(handleOnSubmit)()}
+      closeAction={() => setIsModalsOpen({ register: false })}
     />
   );
 };
 
-export default LoginModal;
+export default RegisterModal;

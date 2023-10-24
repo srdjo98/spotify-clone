@@ -16,7 +16,7 @@ const Song = ({ title, description, imageUrl }: SongProps) => {
           src={`/../public/images/${imageUrl}`}
           width={45}
           height={45}
-          alt="dua lipa"
+          alt={title}
         />
       </div>
       <div className="pl-5 text-left">

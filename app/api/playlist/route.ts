@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 
 export const POST = async () => {
   const user = await getUserSession();
-  let userId: any;
 
   if (user?.user?.email) {
     const currentUser = await prisma.user.findUnique({
@@ -13,18 +12,33 @@ export const POST = async () => {
       },
     });
 
-    userId = currentUser?.id;
-
-    const playlist = await prisma.playlist.create({
-      data: {
-        title: "",
-        description: "",
-        imageUrl: "placeholder.png",
-        userId,
+    const playlists = await prisma.playlist.findMany({
+      where: {
+        title: {
+          contains: "Playlist",
+          mode: "insensitive",
+        },
       },
     });
 
-    return NextResponse.json(playlist);
+    let title: string;
+    if (playlists.length === 0) {
+      title = `Playlist 0`
+    } else {
+      title = `Playlist ${playlists.length ++}`
+    }
+
+    if (currentUser) {
+      const playlist = await prisma.playlist.create({
+        data: {
+          title: title,
+          description: "Auto generated description",
+          imageUrl: "placeholder.png",
+          userId: currentUser?.id,
+        },
+      });
+      return NextResponse.json(playlist);
+    }
   }
 
   return NextResponse.json("DATA");

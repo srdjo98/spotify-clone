@@ -35,8 +35,6 @@ export const authOptions: any = {
         //   throw new Error("Wrong password");
         // }
 
-        console.log("auth options", user);
-
         return user;
       },
     }),

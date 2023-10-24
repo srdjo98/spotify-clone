@@ -11,63 +11,87 @@ datasource db {
 }
 
 model User {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  email String @unique
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  email          String @unique
   hashedPassword String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  songs Song[]
+  songs     Song[]
   playlists Playlist[]
-  albums Album[]
+  albums    Album[]
+  subscription Subscription?
 }
 
 model Song {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  albumId String @db.ObjectId
-  userId String @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  albumId     String   @db.ObjectId
+  userId      String   @db.ObjectId
   playlistIDs String[] @db.ObjectId
-  title String
-  imageUrl String
+  title       String
+  imageUrl    String
   description String
-  audioUrl String?
-  duration String?
+  audioUrl    String?
+  duration    String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  album     Album      @relation(fields: [albumId], references: [id], onDelete: Cascade)
   playlists Playlist[] @relation(fields: [playlistIDs], references: [id])
-} 
+}
 
 model Album {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  title String
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String  @db.ObjectId
+  title       String
   description String
-  imageUrl String?
+  imageUrl    String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   songs Song[]
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Playlist {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  title String
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  title       String
   description String
-  imageUrl String?
-  songIDs String[] @db.ObjectId
+  imageUrl    String?
+  songIDs     String[] @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   songs Song[] @relation(fields: [songIDs], references: [id])
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SubscriptionType {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String 
+
+  subscription Subscription?
+}
+
+model Subscription {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @unique @db.ObjectId
+  typeId String @unique @db.ObjectId
+  status String
+  amount Float
+  currency String
+
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+  subscriptionType SubscriptionType @relation(fields: [typeId], references: [id])
 }

@@ -8,20 +8,21 @@ import {
   useState,
 } from "react";
 import { SongProps } from "../components/TableList";
+import { Song } from "@prisma/client";
 
 interface AudioPlayerProps {
   isOpen: boolean;
   skipCount: number;
   resetSkipCount: () => void;
-  songs: SongProps[];
+  songs: Song[];
   setDisabled: () => void;
-  setSongs: (songs: SongProps[]) => void;
+  setSongs: (songs: Song[]) => void;
   onClose: () => void;
   song: {
     isPlaying: boolean;
     isDisabled: boolean;
-    current: SongProps | undefined;
-    setCurrent: (song: SongProps) => void;
+    current: Song | undefined;
+    setCurrent: (song: Song) => void;
     onPlay: () => void;
     onPause: () => void;
     onNext: () => void;
@@ -42,12 +43,12 @@ export const AudioPlayerProvider = ({
   const [isOpen, setIsOpen] = useState(false);
   const [skipCount, setSkipCount] = useState<number>(0);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
-  const [currentSong, setCurrentSong] = useState<SongProps>();
-  const [songs, setSongs] = useState<SongProps[]>([]);
+  const [currentSong, setCurrentSong] = useState<Song>();
+  const [songs, setSongs] = useState<Song[]>([]);
 
   const handlePlaying = () => {
     setIsOpen(true);
-    setIsPlaying(!isPlaying); // check
+    setIsPlaying(!isPlaying);
   };
 
   const handleNext = () => {
@@ -83,14 +84,14 @@ export const AudioPlayerProvider = ({
       skipCount,
       resetSkipCount: () => setSkipCount(0),
       songs,
-      setSongs: (songs: SongProps[]) => setSongs(songs),
+      setSongs: (songs: Song[]) => setSongs(songs),
       setDisabled: () => setIsDisabled(!isDisabled),
       onClose: handleClose,
       song: {
         isPlaying,
         isDisabled,
         current: currentSong,
-        setCurrent: (song: SongProps) => setCurrentSong(song),
+        setCurrent: (song: Song) => setCurrentSong(song),
         onPlay: handlePlaying,
         onPause: () => setIsPlaying(false),
         onNext: handleNext,

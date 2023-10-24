@@ -5,21 +5,25 @@ interface OptionFieldsProps {
   value: string;
 }
 
-interface InputProps {
-  type: string;
-  defaultValue: string;
-  field: any;
-  options?: {
-    optionFields?: OptionFieldsProps[];
-    width?: number;
-    required?: {
-      value: boolean;
-      message: string;
-    };
-  };
+interface OptionsRequiredProps {
+  value: boolean;
+  message: string;
 }
 
-const Input = ({ type, field, options }: InputProps) => {
+interface OptionsProps {
+  optionFields?: OptionFieldsProps[];
+  width?: number;
+  required?: OptionsRequiredProps;
+}
+
+interface InputProps<T> {
+  defaultValue: string;
+  field: T;
+  type?: string;
+  options?: OptionsProps;
+}
+
+const Input = <T,>({ type, field, options }: InputProps<T>) => {
   let input;
 
   switch (type) {
@@ -42,15 +46,6 @@ const Input = ({ type, field, options }: InputProps) => {
         />
       );
       break;
-    case "text":
-      input = (
-        <input
-          {...field}
-          type="text"
-          className={`w-[${options?.width || 100}%] rounded-xl p-2 text-black`}
-        />
-      );
-      break;
     case "select":
       input = (
         <select
@@ -68,7 +63,14 @@ const Input = ({ type, field, options }: InputProps) => {
       );
       break;
     default:
-      input = null;
+      input = input = (
+        <input
+          {...field}
+          type="text"
+          className={`w-[${options?.width || 100}%] rounded-xl p-2 text-black`}
+        />
+      );
+      break;
   }
 
   return input;

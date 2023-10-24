@@ -11,7 +11,7 @@ const AlbumPage = async ({ params }: { params: AlbumPageProps }) => {
 
   return (
     <Container>
-      <AlbumClient data={data} />
+      <AlbumClient album={data.album} songs={data.songs} />
     </Container>
   );
 };

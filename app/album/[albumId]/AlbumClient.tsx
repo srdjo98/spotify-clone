@@ -11,25 +11,24 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { useSession } from "next-auth/react";
 
 interface AlbumClientProps {
-  data: {
-    album: AlbumProps;
-    songs: SongProps[];
-  };
+  album: AlbumProps;
+  songs: SongProps[];
 }
 
-const AlbumClient = ({ data }: AlbumClientProps) => {
+const AlbumClient = ({ album, songs }: AlbumClientProps) => {
+console.log(songs);
   const { data: session } = useSession();
-  const { onOpen } = useModel();
+  const { setIsModalsOpen } = useModel();
   const { setSongs, song } = useAudioPlayer();
   const columnHelper = createColumnHelper<SongProps>();
 
   const handlePlay = (audioUrl: string | undefined) => {
     if (!session?.user) {
-      onOpen();
+      setIsModalsOpen({album: true});
       return;
     }
-    setSongs(data.songs);
-    const currentSong = data.songs.find((song) => song.audioUrl === audioUrl);
+    setSongs(songs);
+    const currentSong = songs.find((song) => song.audioUrl === audioUrl);
     song.setCurrent(currentSong!);
     song.onPlay();
   };
@@ -71,13 +70,13 @@ const AlbumClient = ({ data }: AlbumClientProps) => {
   return (
     <>
       <SectionHeader
-        title={data.album.title}
+        title={album.title}
         subtitle="Album"
-        description={data.album.description}
-        imageUrl={data.album.imageUrl || ""}
-        listCount={data.songs.length}
+        description={album.description}
+        imageUrl={album.imageUrl || ""}
+        listCount={songs.length}
       />
-      <TableList data={data.songs} columns={columns} />
+      <TableList songs={songs} columns={columns} />
     </>
   );
 };

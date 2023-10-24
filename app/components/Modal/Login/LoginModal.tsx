@@ -2,63 +2,43 @@
 
 import { useModel } from "@/app/contexts/modalContext";
 import { useSnackBar } from "@/app/contexts/useSnackBar";
-import axios from "axios";
+import { signIn } from "next-auth/react";
 import { Controller, useForm } from "react-hook-form";
-import Input from "../Input/Input";
-import Modal from "./Modal";
+import Input from "../../Input/Input";
+import Modal from "../Modal";
 
-const RegisterModal = () => {
-  const { onClose } = useModel();
+interface FormDataProps {
+  email: string;
+  password: string;
+}
+
+const LoginModal = () => {
   const { notify } = useSnackBar();
+  const { setIsModalsOpen } = useModel();
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<any>();
 
-  const handleOnSubmit = (data: any) => {
-    axios
-      .post("/api/register", {
-        ...data,
-      })
-      .then(() => {
-        onClose();
-        notify({
-          message: "Registered!",
-        });
-      })
-      .catch((e) => console.log(e.message));
+  const onSubmit = (data: FormDataProps) => {
+    signIn("credentials", {
+      ...data,
+      callbackUrl: "http://localhost:3000/",
+    }).then(() => {
+      setIsModalsOpen({ login: false });
+      notify({
+        message: "Logged in.",
+      });
+    });
   };
 
   const formFields = [
     {
-      label: "Name",
-      name: "name",
-      type: "text",
-      defaultValue: "",
-      options: {
-        required: {
-          value: true,
-          message: "Required field.",
-        },
-      },
-    },
-    {
       label: "Email",
       name: "email",
-      type: "text",
       defaultValue: "",
       options: {
-        optionFields: [
-          {
-            label: "VW",
-            value: "vw",
-          },
-          {
-            label: "Audi",
-            value: "audi",
-          },
-        ],
         required: {
           value: true,
           message: "Required field.",
@@ -68,7 +48,6 @@ const RegisterModal = () => {
     {
       label: "Password",
       name: "password",
-      type: "text",
       defaultValue: "",
       options: {
         required: {
@@ -99,7 +78,6 @@ const RegisterModal = () => {
             rules={{ required: field?.options?.required }}
             render={({ field: controllerField }) => (
               <Input
-                type={field.type}
                 field={controllerField}
                 defaultValue={field.defaultValue}
                 options={field.options}
@@ -113,13 +91,16 @@ const RegisterModal = () => {
 
   return (
     <Modal
-      title="Sign Up"
-      subTitle="Sign Up to get better features."
+      title="Login"
+      subTitle="Login to website"
       body={body}
-      primaryActionLabel="Sign Up"
-      primaryAction={() => handleSubmit(handleOnSubmit)()}
+      primaryActionLabel="Login"
+      primaryAction={handleSubmit(onSubmit)}
+      secondaryActionLabel="Sign Up"
+      secondaryAction={() => {}}
+      closeAction={() => setIsModalsOpen({ login: false })}
     />
   );
 };
 
-export default RegisterModal;
+export default LoginModal;
